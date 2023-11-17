@@ -1,9 +1,16 @@
-// todo list.
-import React,{ useRef, useState } from
-'react';
-import ToDoItem from
-'./todoitem';
+import React,{ useRef, useState } from 'react';
 import './todo.css';
+
+const ToDoItem=({ id,task,completed,ontogglecompletion }) =>{
+    const completedStyle = completed ? { textDecoration: 'line-through' }: {};
+
+    return (
+        <li style={completedStyle}onClick={() => ontogglecompletion(id)}>
+            {task}
+        </li>
+    );
+};
+
 const ToDoList =()=>{
     const [ToDoItems, settodoitems] = useState([]);
     const todoref = useRef(null);
@@ -58,15 +65,3 @@ return (
 
 // todo item.
 export default ToDoList;
-
-import React from'react';
-const ToDoItem=({ id,task,completed,ontogglecompletion }) =>{
-    const completedStyle = completed ? { textDecoration: 'line-through' }: {};
-
-    return (
-        <li style={completedStyle}onClick={() => ontogglecompletion(id)}>
-            {task}
-        </li>
-    );
-};
-export default ToDoItem; 
