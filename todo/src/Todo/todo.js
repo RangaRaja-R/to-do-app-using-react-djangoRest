@@ -54,6 +54,10 @@ const ToDoList =()=>{
             setToDoItems(updatedToDoItems);
         };
 
+        const clearTask = () => {
+            setToDoItems([]);
+        }
+
         const clearDone = () => {
             const updatedToDoItems = toDoItems.filter((toDoItem) => {
                 return !toDoItem.completed;
@@ -93,6 +97,7 @@ return (
                                 ))}
                             </tbody>
                         </table>
+                        <button onClick={clearTask}>Reset</button>
                         <button onClick={clearDone}>Clear</button>
                     </div>
                 </div>
