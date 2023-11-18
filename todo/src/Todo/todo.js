@@ -35,6 +35,7 @@ const ToDoList =()=>{
             } else if (len < 3 || len > 70) {
                 alert('Task length should be between 3 and 75');
             } else {
+                todoref.current.value = '';
                 setToDoItems([...toDoItems, newTask]);
             }
         };
