@@ -97,8 +97,10 @@ return (
                                 ))}
                             </tbody>
                         </table>
-                        <button onClick={clearTask}>Reset</button>
-                        <button onClick={clearDone}>Clear</button>
+                        <div class='input-group mb-3'>
+                            <button class='btn btn-outline-secondary' onClick={clearTask}>Reset</button>
+                            <button class='btn btn-outline-secondary' onClick={clearDone}>Clear</button>
+                        </div>
                     </div>
                 </div>
             </div>

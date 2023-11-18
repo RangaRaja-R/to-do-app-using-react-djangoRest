@@ -7,7 +7,7 @@ body {
     --saturation: 100%;
     --lightness: 44%;
     --main-color: hsl(var(--hue), var(--saturation), var(--lightness));
-    /* --main-color: #00dfc0; */
+    --main-color: #00dfc0;
     --text-color: #454b54;
     --white-color: #fff;
   }
@@ -22,27 +22,18 @@ body {
     min-height: calc(100vh - 100px);
     width: 800px;
   }
-  .to-do-list .container .todo-body .dots {
+  .to-do-list .container .todo-body {
     position: absolute;
     left: 0;
     height: 100%;
   }
-  .dot {
-    position: relative;
-    height: 30px;
-    width: 30px;
-    background-color: var(--main-color);
-    border-radius: 50%;
-    margin: 5px 10px;
-    z-index: 9999999;
-  }
+  
   .to-do-list .container .todo-body .todo-header {
     background-image: url("https://drive.google.com/uc?export=view&id=1_uIEZyB6-i3sPZN_i-jZEEZ86PHa7Vju");
     background-position: center -400px;
     background-size: cover;
     background-repeat: no-repeat;
     height: 150px;
-    border-radius: 2rem !important;
   }
   .to-do-list .container .todo-body .todo-task {
     -webkit-box-flex: 2;
@@ -65,7 +56,6 @@ body {
       var(--white-color) 1px,
       var(--white-color)
     );
-      border-radius: 2rem !important;
   }
   .to-do-list .container .todo--body .todo-task .title {
     color: var(--text-color);
@@ -180,107 +170,12 @@ body {
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
   }
-  
-  .table tbody i.fa-solid.fa-square-check {
-    color: var(--main-color);
-  }
-  .table tbody i.fa-solid.fa-square-check:hover {
-    color: var(--white-colorr);
-  }
-  .table tbody i.fa-regular.fa-square-check:hover {
-    color: var(--main-color);
-  }
-  .table tbody i.fa-trash-can:hover {
-    color: red;
-    -webkit-animation: shake 1s ease 0s infinite normal forwards;
-            animation: shake 1s ease 0s infinite normal forwards;
-  }
-  .wavy {
-    -webkit-text-decoration: line-through var(--main-color) wavy;
-            text-decoration: line-through var(--main-color) wavy;
-  }
+
   .bg-main-color {
     --main-color: hsla(var(--hue), var(--saturation), var(--lightness), 0.1);
     background-color: var(--main-color) !important;
   }
-  /* animation */
-  @-webkit-keyframes shake {
-    0%,
-    100% {
-      -webkit-transform: rotate(0deg);
-              transform: rotate(0deg);
-      -webkit-transform-origin: 50% 50%;
-              transform-origin: 50% 50%;
-    }
-  
-    10% {
-      -webkit-transform: rotate(8deg);
-              transform: rotate(8deg);
-    }
-  
-    20%,
-    40%,
-    60% {
-      -webkit-transform: rotate(-10deg);
-              transform: rotate(-10deg);
-    }
-  
-    30%,
-    50%,
-    70% {
-      -webkit-transform: rotate(10deg);
-              transform: rotate(10deg);
-    }
-  
-    80% {
-      -webkit-transform: rotate(-8deg);
-              transform: rotate(-8deg);
-    }
-  
-    90% {
-      -webkit-transform: rotate(8deg);
-              transform: rotate(8deg);
-    }
-  }
-  @keyframes shake {
-    0%,
-    100% {
-      -webkit-transform: rotate(0deg);
-              transform: rotate(0deg);
-      -webkit-transform-origin: 50% 50%;
-              transform-origin: 50% 50%;
-    }
-  
-    10% {
-      -webkit-transform: rotate(8deg);
-              transform: rotate(8deg);
-    }
-  
-    20%,
-    40%,
-    60% {
-      -webkit-transform: rotate(-10deg);
-              transform: rotate(-10deg);
-    }
-  
-    30%,
-    50%,
-    70% {
-      -webkit-transform: rotate(10deg);
-              transform: rotate(10deg);
-    }
-  
-    80% {
-      -webkit-transform: rotate(-8deg);
-              transform: rotate(-8deg);
-    }
-  
-    90% {
-      -webkit-transform: rotate(8deg);
-              transform: rotate(8deg);
-    }
-  }
-  /* media */
+ /* media */
   @media (max-width: 767.98px) {
     .to-do-list .container .to-do-list-body .to-do-list-header {
       background-position: center -180px !important;
