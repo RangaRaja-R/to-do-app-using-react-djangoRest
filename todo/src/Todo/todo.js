@@ -1,16 +1,16 @@
 import React,{ useRef, useState } from 'react';
 import './todo.css';
 
-const ToDoItem=({ task, ontogglecompletion }) =>{
-    const completedStyle = task.completed ? { textDecoration: 'line-through' }: {};
+const ToDoItem=(props) =>{
+    const completedStyle = props.task.completed ? { textDecoration: 'line-through' }: {};
 
     return (
-        <tr style={completedStyle} onClick={() => ontogglecompletion(task.id)}>
-            <td>{task.id}</td>
+        <tr style={completedStyle} onClick={() => props.ontogglecompletion(props.task.id)}>
+            <td>{props.task.id}</td>
             <td style={completedStyle} >
-                {task.name}
+                {props.task.name}
             </td>
-            <td>{task.date}</td>
+            <td>{props.task.date}</td>
         </tr>
     );
 };
