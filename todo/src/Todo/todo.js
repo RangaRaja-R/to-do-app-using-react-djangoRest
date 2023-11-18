@@ -64,23 +64,23 @@ const ToDoList =()=>{
 
 return (
         <div class="to-do-list">
-            <div class='alignment'>
-                <div class='todo-body'>
-                <div class='dots'>
+            <div class='container d-flex justify-content-center align-items-center p-5'>
+                <div class='todo-body  position-relative d-flex flex-column bg-white rounded-5'>
+                <div class='dots position-absolute overflow-hidden'>
                     <div class='dot'></div>
                 </div>
                 <div class='todo-header'></div>
-                    <div class='todo-task'>
-                        <div class='title'>
-                            <h1 class="">To-Do List</h1>
+                    <div class='todo-task p-5'>
+                        <div class='title text-center'>
+                            <h1 class="fw-bold">To-Do List</h1>
                         </div>
-                        <div class='input'>
+                        <div class='input-group mb-3'>
                             <input class='form-control' id='task-input' placeholder='Add your task...' ref={todoref} onKeyDown={onKeyDown} type="text"></input>
                             <button class='btn btn-outline-secondary' onClick={handleAddToDo}>Add</button>
                         </div>
                         <table class="table">
                             <thead>
-                                <th>Num</th>
+                                <th>Task No</th>
                                 <th class='w-50'>Task</th>
                                 <th>Date</th>
                             </thead>
