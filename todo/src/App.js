@@ -1,10 +1,11 @@
 import './App.css';
-import ToDoList from './Todo/todo';
+// import ToDoList from './Todo/todo';
+import Api from './Todo/api';
 
 function App() {
   return (
     <div>
-      <ToDoList />
+      <Api />
     </div>
   );
 }
