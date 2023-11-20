@@ -1,112 +1,197 @@
-import React,{ useRef, useState } from 'react';
-import './todo.css';
+/* eslint-disable array-callback-return */
+import React from "react";
+import "./todo.css";
 
-const ToDoItem=(props) =>{
-    const completedStyle = props.task.completed ? { textDecoration: 'line-through' }: {};
+export default class ToDoList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      todoList: [],
+      activeItem: {
+        id: null,
+        task: "",
+        date: "",
+        completion_status: false,
+      },
+      editing: false,
+    };
+    this.fetchTasks = this.fetchTasks.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.getCookie = this.getCookie.bind(this);
+    this.clearAll = this.clearAll.bind(this);
+    this.clearDone = this.clearDone.bind(this);
+  }
 
-    return (
-        <tr style={completedStyle} onClick={() => props.ontogglecompletion(props.task.id)}>
-            <td>{props.task.id}</td>
-            <td style={completedStyle} >
-                {props.task.name}
-            </td>
-            <td>{props.task.date}</td>
-        </tr>
+  handleChange(e) {
+    this.setState({
+      ...this.state,
+      activeItem: {
+        id: null,
+        task: e.target.value,
+        date: new Date().toJSON().slice(0, 10),
+        completion_status: false,
+      },
+    });
+  }
+
+  handleClick(e, id) {
+    const url = "http://127.0.0.1:8000/todo-detail/" + id;
+    fetch(url)
+      .then((response) => response.json)
+      .then((data) => console.log(data));
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const csrftoken = this.getCookie("csrftoken");
+    console.log(JSON.stringify(this.state.activeItem));
+    const url = "http://127.0.0.1:8000/todo-create/";
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify(this.state.activeItem),
+    })
+      .then((response) => {
+        this.fetchTasks();
+        this.setState({
+          ...this.state,
+          activeItem: {
+            id: null,
+            task: "",
+            date: "",
+            completion_status: false,
+          },
+        });
+      })
+      .catch(function (error) {
+        console.log("ERROR: ", error);
+      });
+  }
+
+  changeStatus(task) {
+    task.completion_status = !task.completion_status;
+    var url = `http://127.0.0.1:8000/todo-update/${task.id}`;
+    const csrftoken = this.getCookie("csrftoken");
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify(task),
+    })
+      .then((response) => {
+        this.fetchTasks();
+      })
+      .catch(function (error) {
+        console.log("ERROR: ", error);
+      });
+  }
+
+  clearAll() {
+    const csrftoken = this.getCookie("csrftoken");
+    this.state.todoList.map((task) => {
+      fetch(`http://127.0.0.1:8000/todo-delete/${task.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+      }).then((response) => {
+        this.fetchTasks();
+      });
+    });
+  }
+
+  clearDone() {
+    const csrftoken = this.getCookie("csrftoken");
+    const updatedToDoItems = this.state.todoList.filter(
+      (task) => task.completion_status
     );
-};
+    updatedToDoItems.map((task) => {
+      fetch(`http://127.0.0.1:8000/todo-delete/${task.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+      }).then((response) => {
+        this.fetchTasks();
+      });
+    });
+  }
 
-const ToDoList =()=>{
-        const [toDoItems, setToDoItems] = useState([]);
-        const todoref = useRef(null);
-    
-        const handleAddToDo = () => {
-            const today = new Date();
-            const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const newTask = {
-                id: toDoItems.length + 1,
-                name: todoref.current.value.toString(),
-                date: dd + '/' + mm,
-                completed: false,
-            };
-            const len = newTask.name.length;
-            if (!newTask) {
-                return;
-            } else if (len < 3 || len > 70) {
-                alert('Task length should be between 3 and 75');
-            } else {
-                todoref.current.value = '';
-                setToDoItems([...toDoItems, newTask]);
-            }
-        };
-    
-        const onKeyDown = event => {
-            if (event.key === 'Enter') handleAddToDo();
-        };
-    
-        const handleToggleCompletion = (id) => {
-            const updateToDoItem = (item) => ({
-                ...item,
-                completed: item.id === id ? !item.completed : item.completed,
-            });
-        
-            const updatedToDoItems = toDoItems.map(updateToDoItem);
-            setToDoItems(updatedToDoItems);
-        };
+  fetchTasks() {
+    const url = "http://127.0.0.1:8000/todo-list";
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) =>
+        this.setState({
+          ...this.state,
+          todoList: data,
+        })
+      );
+  }
 
-        const clearTask = () => {
-            setToDoItems([]);
+  getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
+      }
+    }
+    return cookieValue;
+  }
 
-        const clearDone = () => {
-            const updatedToDoItems = toDoItems.filter((toDoItem) => {
-                return !toDoItem.completed;
-            });
-            setToDoItems(updatedToDoItems);
-        };
-    
+  componentWillMount() {
+    this.fetchTasks();
+  }
 
-return (
-        <div class="to-do-list">
-            <div class='container d-flex justify-content-center align-items-center p-5'>
-                <div class='todo-body  position-relative d-flex flex-column bg-white rounded-5'>
-                <div class='dots position-absolute overflow-hidden'>
-                    <div class='dot'></div>
-                </div>
-                <div class='todo-header'></div>
-                    <div class='todo-task p-5'>
-                        <div class='title text-center'>
-                            <h1 class="fw-bold">To-Do List</h1>
-                        </div>
-                        <div class='input-group mb-3'>
-                            <input class='form-control' id='task-input' placeholder='Add your task...' ref={todoref} onKeyDown={onKeyDown} type="text"></input>
-                            <button class='btn btn-outline-secondary' onClick={handleAddToDo}>Add</button>
-                        </div>
-                        <table class="table">
-                            <thead>
-                                <th>Task No</th>
-                                <th class='w-50'>Task</th>
-                                <th>Date</th>
-                            </thead>
-                            <tbody class='tasksbody'>
-                                {toDoItems.map((item)=>(
-                                    <ToDoItem
-                                        task={item}
-                                        ontogglecompletion={handleToggleCompletion}
-                                    />
-                                ))}
-                            </tbody>
-                        </table>
-                        <div class='input-group mb-3'>
-                            <button class='btn btn-outline-secondary' onClick={clearTask}>Reset</button>
-                            <button class='btn btn-outline-secondary' onClick={clearDone}>Clear</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  render() {
+    var tasks = this.state.todoList;
+    var self = this;
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            onChange={this.handleChange}
+            type="text"
+            value={this.state.activeItem.task}
+          />
+          <button type="submit">Add</button>
+        </form>
+        <div>
+          {tasks.map(function (task, index) {
+            const completedStyle = task.completion_status
+              ? { textDecoration: "line-through" }
+              : {};
+            return (
+              <div
+                style={completedStyle}
+                key={index}
+                onClick={() => self.changeStatus(task)}
+                className="task-wrapper"
+              >
+                <span>
+                  {index + 1}. {task.task}
+                </span>
+              </div>
+            );
+          })}
+          <button onClick={this.clearAll}>Reset</button>
+          <button onClick={this.clearDone}>Clear</button>
         </div>
+      </div>
     );
-};
-
-// todo item.
-export default ToDoList;
+  }
+}
