@@ -6,7 +6,6 @@ import { Fab } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
-import { red } from "@mui/material/colors";
 export default class ToDoList extends React.Component {
   constructor(props) {
     super(props);
@@ -42,9 +41,7 @@ export default class ToDoList extends React.Component {
 
   handleClick(e, id) {
     const url = "http://127.0.0.1:8000/todo-detail/" + id;
-    fetch(url)
-      .then((response) => response.json)
-      .then((data) => console.log(data));
+    fetch(url).then((response) => response.json);
   }
 
   handleSubmit(e) {
@@ -61,7 +58,6 @@ export default class ToDoList extends React.Component {
       body: JSON.stringify(this.state.activeItem),
     })
       .then((response) => {
-        this.fetchTasks();
         this.setState({
           ...this.state,
           activeItem: {
@@ -88,13 +84,9 @@ export default class ToDoList extends React.Component {
         "X-CSRFToken": csrftoken,
       },
       body: JSON.stringify(task),
-    })
-      .then((response) => {
-        this.fetchTasks();
-      })
-      .catch(function (error) {
-        console.log("ERROR: ", error);
-      });
+    }).catch(function (error) {
+      console.log("ERROR: ", error);
+    });
   }
 
   clearAll() {
@@ -106,8 +98,6 @@ export default class ToDoList extends React.Component {
           "Content-type": "application/json",
           "X-CSRFToken": csrftoken,
         },
-      }).then((response) => {
-        this.fetchTasks();
       });
     });
   }
@@ -124,8 +114,6 @@ export default class ToDoList extends React.Component {
           "Content-type": "application/json",
           "X-CSRFToken": csrftoken,
         },
-      }).then((response) => {
-        this.fetchTasks();
       });
     });
   }
@@ -159,6 +147,10 @@ export default class ToDoList extends React.Component {
   }
 
   componentWillMount() {
+    this.fetchTasks();
+  }
+
+  componentWillUpdate() {
     this.fetchTasks();
   }
 
