@@ -5,6 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Fab } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import AddIcon from "@mui/icons-material/Add";
+import TextField from "@mui/material/TextField";
+import { red } from "@mui/material/colors";
 export default class ToDoList extends React.Component {
   constructor(props) {
     super(props);
@@ -165,21 +167,28 @@ export default class ToDoList extends React.Component {
     var self = this;
     return (
       <div>
-        <h1>ToDo List</h1>
+        <div class="todo-heading">
+          <h1>ToDo List</h1>
+        </div>
         <div class="input-container">
           <form onSubmit={this.handleSubmit}>
-            <input
-              onChange={this.handleChange}
-              type="text"
+            <TextField
+              id="standard-basic"
+              label="Add a Task...  "
+              variant="standard"
+              color="success"
+              size="medium"
+              sx={{ width: 350 }}
               value={this.state.activeItem.task}
+              onChange={this.handleChange}
             />
             <Fab size="small" color="success" aria-label="add" type="submit">
               <AddIcon />
             </Fab>
           </form>
         </div>
-        <div className="table-width">
-          <table class="task-wrapper table table-borderless">
+        <div className="table-container">
+          <table class="task-wrapper table table-borderless shadow-lg p-3 mb-5  rounded">
             <thead>
               <th scope="col">Task Name</th>
               <th scope="col">Task Date</th>
@@ -187,7 +196,11 @@ export default class ToDoList extends React.Component {
             <tbody>
               {tasks.map(function (task, index) {
                 const completedStyle = task.completion_status
-                  ? { textDecoration: "line-through" }
+                  ? {
+                      textDecoration: "line-through",
+                      color: "green",
+                      textDecorationThickness: "3px",
+                    }
                   : {};
                 return (
                   <tr
