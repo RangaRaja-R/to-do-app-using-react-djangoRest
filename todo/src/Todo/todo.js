@@ -1,7 +1,10 @@
 /* eslint-disable array-callback-return */
 import React from "react";
 import "./todo.css";
-
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Fab } from "@mui/material";
+import CachedIcon from "@mui/icons-material/Cached";
+import AddIcon from "@mui/icons-material/Add";
 export default class ToDoList extends React.Component {
   constructor(props) {
     super(props);
@@ -162,34 +165,51 @@ export default class ToDoList extends React.Component {
     var self = this;
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            onChange={this.handleChange}
-            type="text"
-            value={this.state.activeItem.task}
-          />
-          <button type="submit">Add</button>
-        </form>
-        <div>
-          {tasks.map(function (task, index) {
-            const completedStyle = task.completion_status
-              ? { textDecoration: "line-through" }
-              : {};
-            return (
-              <div
-                style={completedStyle}
-                key={index}
-                onClick={() => self.changeStatus(task)}
-                className="task-wrapper"
-              >
-                <span>
-                  {index + 1}. {task.task}
-                </span>
-              </div>
-            );
-          })}
-          <button onClick={this.clearAll}>Reset</button>
-          <button onClick={this.clearDone}>Clear</button>
+        <h1>ToDo List</h1>
+        <div class="input-container">
+          <form onSubmit={this.handleSubmit}>
+            <input
+              onChange={this.handleChange}
+              type="text"
+              value={this.state.activeItem.task}
+            />
+            <Fab size="small" color="success" aria-label="add" type="submit">
+              <AddIcon />
+            </Fab>
+          </form>
+        </div>
+        <div className="table-width">
+          <table class="task-wrapper table table-borderless">
+            <thead>
+              <th scope="col">Task Name</th>
+              <th scope="col">Task Date</th>
+            </thead>
+            <tbody>
+              {tasks.map(function (task, index) {
+                const completedStyle = task.completion_status
+                  ? { textDecoration: "line-through" }
+                  : {};
+                return (
+                  <tr
+                    style={completedStyle}
+                    key={index}
+                    onClick={() => self.changeStatus(task)}
+                  >
+                    <td>{task.task}</td>
+                    <td>{task.date}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <div class="button-outer">
+            <div class="button-inner">
+              <CachedIcon onClick={this.clearAll} aria-label="reset" />
+            </div>
+            <div class="button-inner" aria-label="delete">
+              <DeleteIcon onClick={this.clearDone} aria-label="delete" />
+            </div>
+          </div>
         </div>
       </div>
     );
