@@ -2,7 +2,7 @@
 import React from "react";
 import "./todo.css";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Fab } from "@mui/material";
+import { Fab, IconButton, Tooltip } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
@@ -58,6 +58,7 @@ export default class ToDoList extends React.Component {
       body: JSON.stringify(this.state.activeItem),
     })
       .then((response) => {
+        this.fetchTasks();
         this.setState({
           ...this.state,
           activeItem: {
@@ -84,9 +85,11 @@ export default class ToDoList extends React.Component {
         "X-CSRFToken": csrftoken,
       },
       body: JSON.stringify(task),
-    }).catch(function (error) {
-      console.log("ERROR: ", error);
-    });
+    })
+      .then((response) => this.fetchTasks())
+      .catch(function (error) {
+        console.log("ERROR: ", error);
+      });
   }
 
   clearAll() {
@@ -98,7 +101,7 @@ export default class ToDoList extends React.Component {
           "Content-type": "application/json",
           "X-CSRFToken": csrftoken,
         },
-      });
+      }).then((response) => this.fetchTasks());
     });
   }
 
@@ -114,7 +117,7 @@ export default class ToDoList extends React.Component {
           "Content-type": "application/json",
           "X-CSRFToken": csrftoken,
         },
-      });
+      }).then((response) => this.fetchTasks());
     });
   }
 
@@ -147,10 +150,6 @@ export default class ToDoList extends React.Component {
   }
 
   componentWillMount() {
-    this.fetchTasks();
-  }
-
-  componentWillUpdate() {
     this.fetchTasks();
   }
 
@@ -209,10 +208,18 @@ export default class ToDoList extends React.Component {
           </table>
           <div class="button-outer">
             <div class="button-inner">
-              <CachedIcon onClick={this.clearAll} aria-label="reset" />
+              <Tooltip title="Delete all tasks" placement="bottom-start">
+                <IconButton>
+                  <CachedIcon onClick={this.clearAll} aria-label="reset" />
+                </IconButton>
+              </Tooltip>
             </div>
             <div class="button-inner" aria-label="delete">
-              <DeleteIcon onClick={this.clearDone} aria-label="delete" />
+              <Tooltip title="Delete completed tasks" placement="bottom-start">
+                <IconButton>
+                  <DeleteIcon onClick={this.clearDone} aria-label="delete" />
+                </IconButton>
+              </Tooltip>
             </div>
           </div>
         </div>
